@@ -21,13 +21,20 @@ export default function WelcomeScreen({ onStart }) {
       ))}
 
       <div className="welcome-content">
-        {/* logo nhân vật placeholder */}
+        {/* logo gia đình */}
         <motion.div
-          className="welcome-hero"
-          animate={{ y: [0, -16, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className="logo-wrap"
+          animate={{ y: [0, -12, 0] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+          initial={{ scale: 0, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
         >
-          🏃‍♀️
+          <motion.div
+            className="logo-glow"
+            animate={{ scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <img src="/logo.jpg" className="logo-img" alt="Gia đình Emi" />
         </motion.div>
 
         {/* tên game */}
@@ -35,7 +42,7 @@ export default function WelcomeScreen({ onStart }) {
           className="game-title"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: 'spring', duration: 0.8 }}
+          transition={{ type: 'spring', duration: 0.8, delay: 0.3 }}
         >
           <div className="title-line1">🌟 Cuộc Phiêu Lưu</div>
           <div className="title-line2">Của Emi 🌟</div>

@@ -59,6 +59,30 @@ body {
   color: #fff;
   text-shadow: 0 2px 16px rgba(255,255,255,0.4);
 }
+.logo-wrap {
+  position: relative;
+  width: 200px; height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo-glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,220,50,0.6), rgba(255,120,200,0.3), transparent 70%);
+  filter: blur(8px);
+}
+.logo-img {
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 5px solid rgba(255,255,255,0.9);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 3px rgba(255,220,50,0.6);
+  position: relative;
+  z-index: 1;
+}
 .welcome-icons {
   display: flex;
   align-items: center;
