@@ -60,19 +60,26 @@ export default function CaptureScreen({ onCapture }) {
   const capture = useCallback(() => {
     const canvas = canvasRef.current
     const video = videoRef.current
-    const size = 300
+    const size = 400
     canvas.width = size
     canvas.height = size
     const ctx = canvas.getContext('2d')
-    // vẽ hình tròn crop
+
+    // crop chính giữa video để không bị méo (center-crop)
+    const vw = video.videoWidth || video.clientWidth
+    const vh = video.videoHeight || video.clientHeight
+    const side = Math.min(vw, vh)
+    const sx = (vw - side) / 2
+    const sy = (vh - side) / 2
+
     ctx.beginPath()
     ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2)
     ctx.clip()
-    ctx.drawImage(video, 0, 0, size, size)
+    ctx.drawImage(video, sx, sy, side, side, 0, 0, size, size)
+
     const dataUrl = canvas.toDataURL('image/png')
     setPreview(dataUrl)
     setCountdown(null)
-    // dừng camera
     video.srcObject?.getTracks().forEach(t => t.stop())
     speak('Đẹp quá! Bắt đầu chơi thôi!')
   }, [])

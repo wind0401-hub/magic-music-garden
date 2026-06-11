@@ -8,11 +8,15 @@ import { createStar, updateStars, checkStarCollect } from '../game/stars'
 import ProgressBar from '../components/ProgressBar'
 
 const CLOUDS = [
-  { id: 1, top: '8%',  size: 64, speed: 18 },
-  { id: 2, top: '18%', size: 48, speed: 25 },
-  { id: 3, top: '5%',  size: 80, speed: 30 },
+  { id: 1, top: '6%',  size: 56, speed: 22, delay: 0 },
+  { id: 2, top: '16%', size: 44, speed: 28, delay: 5 },
+  { id: 3, top: '3%',  size: 72, speed: 35, delay: 12 },
 ]
-const BG_FLOWERS = ['🌸', '🌺', '🌼', '🌷', '💐']
+const BUTTERFLIES = [
+  { id: 1, top: '30%', speed: 14, delay: 0 },
+  { id: 2, top: '42%', speed: 18, delay: 6 },
+]
+const BG_FLOWERS = ['🌸', '🌺', '🌼', '🌷', '🌻']
 
 export default function GameScreen({ faceImage, onEnd }) {
   const { stateRef, jump, update: updatePlayer, triggerHit } = usePlayer()
@@ -150,9 +154,20 @@ export default function GameScreen({ faceImage, onEnd }) {
           key={c.id}
           className="cloud"
           style={{ top: c.top, fontSize: c.size }}
-          animate={{ x: ['-10%', '110%'] }}
-          transition={{ duration: c.speed, repeat: Infinity, ease: 'linear', delay: c.id * 4 }}
+          animate={{ x: ['-15vw', '110vw'] }}
+          transition={{ duration: c.speed, repeat: Infinity, ease: 'linear', delay: c.delay }}
         >☁️</motion.div>
+      ))}
+
+      {/* bướm bay */}
+      {BUTTERFLIES.map(b => (
+        <motion.div
+          key={b.id}
+          className="butterfly"
+          style={{ top: b.top }}
+          animate={{ x: ['110vw', '-15vw'], y: [0, -20, 10, -15, 0] }}
+          transition={{ duration: b.speed, repeat: Infinity, ease: 'linear', delay: b.delay }}
+        >🦋</motion.div>
       ))}
 
       {/* hoa trang trí mặt đất */}
