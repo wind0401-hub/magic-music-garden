@@ -156,11 +156,11 @@ export default function GameScreen({ faceImage, onEnd }) {
       }
 
       const ps = stateRef.current
-      // chỉ va chạm khi player đang gần mặt đất (không phải đang nhảy cao)
+      // chỉ va chạm khi player đang gần mặt đất VÀ obstacle chưa đi qua (đang đến từ phải)
       const isNearGround = ps.y >= GAME_CONFIG.groundY - 6
-      const hit = isNearGround && g.obstacles.some(o => {
-        const dx = Math.abs(o.x - GAME_CONFIG.playerX)
-        return dx < 5
+      const hit = isNearGround && !ps.isHit && g.obstacles.some(o => {
+        const sdx = o.x - GAME_CONFIG.playerX // dương = bên phải, âm = đã qua
+        return sdx > -3 && sdx < 5
       })
       if (hit) {
         const triggered = triggerHit()
