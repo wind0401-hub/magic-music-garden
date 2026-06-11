@@ -149,19 +149,33 @@ export default function GameScreen({ faceImage, onEnd }) {
         sounds.star()
         speak(SPEECHES.collectStar)
         const eid = Date.now()
-        g.collectEffects = [...g.collectEffects, { id: eid, x: GAME_CONFIG.playerX, y: stateRef.current.y }]
+        g.collectEffects = [...g.collectEffects,
+          { id: eid, x: GAME_CONFIG.playerX, y: stateRef.current.y, label: '+1' }
+        ]
         setTimeout(() => { g.collectEffects = g.collectEffects.filter(e => e.id !== eid) }, 700)
       }
 
       const ps = stateRef.current
-      const hit = g.obstacles.some(o => {
+      // chỉ va chạm khi player đang gần mặt đất (không phải đang nhảy cao)
+      const isNearGround = ps.y >= GAME_CONFIG.groundY - 6
+      const hit = isNearGround && g.obstacles.some(o => {
         const dx = Math.abs(o.x - GAME_CONFIG.playerX)
-        const dy = Math.abs(ps.y - GAME_CONFIG.groundY)
-        return dx < 7 && dy < 10
+        return dx < 5
       })
       if (hit) {
         const triggered = triggerHit()
-        if (triggered) { sounds.hit(); speak(SPEECHES.hit); hitFlash = true }
+        if (triggered) {
+          const prevScore = g.score
+          g.score = Math.max(0, g.score - 1)
+          sounds.hit(); speak(SPEECHES.hit); hitFlash = true
+          if (prevScore > 0) {
+            const eid = Date.now()
+            g.collectEffects = [...g.collectEffects,
+              { id: eid, x: GAME_CONFIG.playerX, y: stateRef.current.y, label: '-1' }
+            ]
+            setTimeout(() => { g.collectEffects = g.collectEffects.filter(e => e.id !== eid) }, 700)
+          }
+        }
       }
 
       setRenderState({
@@ -215,9 +229,8 @@ export default function GameScreen({ faceImage, onEnd }) {
           </button>
         </div>
         <div className="score-display">
-          {Array.from({ length: Math.min(renderState.score, 10) }).map((_, i) => (
-            <span key={i}>💖</span>
-          ))}
+          <span className="score-icon">💎</span>
+          <span className="score-number">{renderState.score}</span>
         </div>
       </div>
 
@@ -233,16 +246,16 @@ export default function GameScreen({ faceImage, onEnd }) {
         ))}
       </AnimatePresence>
 
-      {/* hiệu ứng thu thập */}
+      {/* hiệu ứng thu thập / điểm */}
       <AnimatePresence>
         {renderState.collectEffects.map(e => (
-          <motion.div key={e.id} className="collect-burst"
-            style={{ left: `${e.x}%`, top: `${e.y}%` }}
-            initial={{ scale: 0.5, opacity: 1 }}
-            animate={{ scale: 3, opacity: 0 }}
+          <motion.div key={e.id} className={`score-popup ${e.label === '-1' ? 'score-minus' : 'score-plus'}`}
+            style={{ left: `${e.x}%`, top: `${e.y - 5}%` }}
+            initial={{ y: 0, opacity: 1, scale: 1 }}
+            animate={{ y: -40, opacity: 0, scale: 1.5 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-          >✨💖✨</motion.div>
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+          >{e.label}</motion.div>
         ))}
       </AnimatePresence>
 

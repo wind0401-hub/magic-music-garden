@@ -12,11 +12,14 @@ export default function CaptureScreen({ onCapture }) {
   const [step, setStep] = useState('start')   // start | camera | flash | preview
   const [preview, setPreview] = useState(null)
   const [error, setError] = useState(null)
+  const [videoReady, setVideoReady] = useState(false)
 
   useEffect(() => {
     if (step === 'camera' && streamRef.current && videoRef.current) {
       const video = videoRef.current
       video.srcObject = streamRef.current
+      video.onloadedmetadata = () => setVideoReady(true)
+      video.oncanplay = () => setVideoReady(true)
       video.play().catch(() => {})
     }
   }, [step])
@@ -48,8 +51,9 @@ export default function CaptureScreen({ onCapture }) {
     canvas.width = size
     canvas.height = size
     const ctx = canvas.getContext('2d')
-    const vw = video.videoWidth || video.clientWidth
-    const vh = video.videoHeight || video.clientHeight
+    // iOS: videoWidth có thể = 0 trước khi load xong, dùng offsetWidth làm fallback
+    const vw = video.videoWidth > 0 ? video.videoWidth : video.offsetWidth || 640
+    const vh = video.videoHeight > 0 ? video.videoHeight : video.offsetHeight || 480
     const side = Math.min(vw, vh)
     const sx = (vw - side) / 2
     const sy = (vh - side) / 2
@@ -113,19 +117,23 @@ export default function CaptureScreen({ onCapture }) {
             <div className="cap-title small">Nhìn vào đây rồi nhấn 📸</div>
             <div className="cam-frame">
               <video ref={videoRef} className="camera-video" playsInline muted />
+              {!videoReady && (
+                <div className="cam-loading">⏳</div>
+              )}
               {/* viền nháy */}
               <motion.div className="cam-ring"
                 animate={{ opacity:[0.4,1,0.4], scale:[1,1.03,1] }}
                 transition={{ duration:1.2, repeat:Infinity }}
               />
             </div>
-            <motion.button className="cap-btn" onClick={capture}
-              animate={{ scale:[1,1.08,1] }}
+            <motion.button className="cap-btn" onClick={videoReady ? capture : undefined}
+              style={{ opacity: videoReady ? 1 : 0.5 }}
+              animate={videoReady ? { scale:[1,1.08,1] } : {}}
               transition={{ duration:1.2, repeat:Infinity }}
-              whileTap={{ scale:0.88 }}
+              whileTap={videoReady ? { scale:0.88 } : {}}
             >
               <span className="cap-btn-icon">📸</span>
-              <span className="cap-btn-label">Chụp ngay!</span>
+              <span className="cap-btn-label">{videoReady ? 'Chụp ngay!' : 'Đang mở...'}</span>
             </motion.button>
           </motion.div>
         )}
