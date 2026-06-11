@@ -6,6 +6,7 @@ import { usePlayer } from '../game/usePlayer'
 import { createObstacle, updateObstacles } from '../game/obstacles'
 import { createStar, updateStars, checkStarCollect } from '../game/stars'
 import ProgressBar from '../components/ProgressBar'
+import ChibiObstacle from '../components/ChibiObstacle'
 
 const CLOUDS = [
   { id: 1, top: '6%',  size: 56, speed: 22, delay: 0 },
@@ -255,9 +256,11 @@ export default function GameScreen({ faceImage, onEnd }) {
         )}
       </AnimatePresence>
 
-      {/* chướng ngại vật */}
+      {/* chướng ngại vật chibi */}
       {renderState.obstacles.map(o => (
-        <div key={o.id} className="obstacle" style={{ left: `${o.x}%` }}>{o.type}</div>
+        <div key={o.id} className="obstacle" style={{ left: `${o.x}%` }}>
+          <ChibiObstacle type={o.type} />
+        </div>
       ))}
 
       {/* nhân vật */}
