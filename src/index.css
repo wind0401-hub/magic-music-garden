@@ -358,59 +358,145 @@ body {
   text-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
-/* NHÂN VẬT CÔNG CHÚA */
-.player {
+/* HUD TOP */
+.hud-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hud-top .progress-wrap { flex: 1; }
+.pause-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.3);
+  backdrop-filter: blur(6px);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  z-index: 20;
+}
+
+/* PAUSE OVERLAY */
+.pause-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,182,193,0.55);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+}
+.pause-box {
+  display: flex; flex-direction: column; align-items: center; gap: 24px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 32px;
+  padding: 40px 56px;
+  box-shadow: 0 8px 40px rgba(233,30,140,0.2);
+}
+.pause-emoji { font-size: 64px; }
+.resume-btn {
+  font-size: 64px;
+  background: none; border: none; cursor: pointer;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+}
+
+/* NHÂN VẬT CHIBI */
+.player-wrap {
   position: absolute;
   transform: translate(-50%, -100%);
+  z-index: 5;
+  transition: left 0.12s ease-out;
+}
+
+.chibi {
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 5;
-  transition: left 0.15s ease-out;
+  position: relative;
 }
-.player.hit { opacity: 0.65; }
+.chibi-hit { opacity: 0.7; }
 
-.crown {
-  font-size: 32px;
-  margin-bottom: -8px;
-  line-height: 1;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
-}
-
-.face-row {
+/* tai thỏ */
+.bunny-ears {
   display: flex;
-  align-items: center;
-  gap: 2px;
+  gap: 28px;
+  margin-bottom: -6px;
+  position: relative;
+  z-index: 2;
 }
-.arm {
-  font-size: 18px;
-  line-height: 1;
+.ear {
+  width: 16px; height: 32px;
+  border-radius: 50% 50% 40% 40%;
+  background: #f48fb1;
+  border: 2px solid #f06292;
 }
-.arm-left  { transform-origin: bottom right; margin-right: -2px; }
-.arm-right { transform-origin: bottom left;  margin-left:  -2px; transform: scaleX(-1); }
+.ear-inner {
+  width: 8px; height: 20px;
+  border-radius: 50% 50% 40% 40%;
+  background: #fce4ec;
+  position: absolute;
+  top: 4px;
+}
+.ear-left-inner  { left:  4px; }
+.ear-right-inner { right: 4px; }
 
+/* mặt */
 .face-img {
-  width: 66px; height: 66px;
+  width: 72px; height: 72px;
   border-radius: 50%;
-  border: 3px solid white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  border: 4px solid white;
+  box-shadow: 0 4px 16px rgba(233,30,140,0.25);
   object-fit: cover;
   flex-shrink: 0;
+  position: relative;
+  z-index: 2;
 }
 
-.princess-dress {
-  font-size: 68px;
-  margin-top: -14px;
-  line-height: 1;
-  filter: hue-rotate(120deg) saturate(2) brightness(1.1)
-    drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+/* thân + tay */
+.chibi-body { position: relative; margin-top: -2px; }
+.chibi-dress {
+  width: 70px; height: 50px;
+  background: linear-gradient(160deg, #f48fb1, #e91e8c);
+  border-radius: 40% 40% 50% 50%;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(233,30,140,0.3);
+  border: 2px solid rgba(255,255,255,0.4);
 }
+.chibi-arm {
+  width: 14px; height: 32px;
+  background: linear-gradient(180deg, #fce4ec, #f8bbd0);
+  border-radius: 8px;
+  position: absolute;
+  top: 4px;
+  border: 1.5px solid rgba(255,255,255,0.5);
+}
+.arm-l { left: -12px; transform-origin: top center; }
+.arm-r { right: -12px; transform-origin: top center; }
 
-.legs {
+/* chân */
+.chibi-legs {
   display: flex;
-  gap: 2px;
-  font-size: 22px;
-  margin-top: -10px;
+  gap: 8px;
+  margin-top: 2px;
+}
+.chibi-leg {
+  width: 14px; height: 28px;
+  background: linear-gradient(180deg, #f8bbd0, #f06292);
+  border-radius: 6px 6px 8px 8px;
+  transform-origin: top center;
+  border: 1.5px solid rgba(255,255,255,0.4);
+}
+
+.hit-stars {
+  font-size: 28px;
+  position: absolute;
+  top: -16px;
+  animation: popSpin 0.5s ease-out;
+}
+@keyframes popSpin {
+  from { transform: scale(0) rotate(0deg); opacity: 1; }
+  to   { transform: scale(1.5) rotate(180deg); opacity: 0; }
 }
 
 /* HIỆU ỨNG */

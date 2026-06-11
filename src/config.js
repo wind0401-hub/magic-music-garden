@@ -3,7 +3,7 @@ export const BABY_NAME = 'Emi'
 export const GAME_DURATION = 3 * 60 // 3 phút tính bằng giây
 
 export const GAME_CONFIG = {
-  gravity: 0.5,
+  gravity: 0.28,
   jumpForce: -6.5,
   groundY: 72,
   playerX: 18,
