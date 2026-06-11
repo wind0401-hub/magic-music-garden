@@ -62,26 +62,40 @@ export default function CaptureScreen({ onCapture }) {
       <canvas ref={canvasRef} style={{ display: 'none' }} />
 
       {!ready && !preview && (
-        <button className="big-btn" onClick={startCamera}>
-          📸
-        </button>
+        <div className="capture-start">
+          <div className="capture-instruction">
+            <div className="ci-icon">🤳</div>
+            <div className="ci-text">Nhìn vào camera</div>
+          </div>
+          <button className="open-camera-btn" onClick={startCamera}>
+            📸
+            <span>Mở camera</span>
+          </button>
+        </div>
       )}
 
       {ready && !preview && (
         <div className="camera-wrap">
           <video ref={videoRef} className="camera-video" playsInline muted />
           {countdown !== null ? (
-            <div className="countdown">{countdown || '😊'}</div>
+            <div className="countdown">{countdown > 0 ? countdown : '😄'}</div>
           ) : (
-            <button className="shutter-btn" onClick={startCountdown}>📸</button>
+            <>
+              <div className="camera-hint">👆 Nhấn để chụp!</div>
+              <button className="shutter-btn" onClick={startCountdown}>📸</button>
+            </>
           )}
         </div>
       )}
 
       {preview && (
         <div className="preview-wrap">
+          <div className="preview-label">✨ Đẹp quá! ✨</div>
           <img src={preview} className="face-preview" alt="Ảnh bé" />
-          <button className="big-btn play-btn" onClick={() => onCapture(preview)}>▶️</button>
+          <button className="open-camera-btn green" onClick={() => onCapture(preview)}>
+            ▶️
+            <span>Chơi thôi!</span>
+          </button>
         </div>
       )}
     </div>

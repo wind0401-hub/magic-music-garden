@@ -1,10 +1,11 @@
 import { useState } from 'react'
+import WelcomeScreen from './screens/WelcomeScreen'
 import CaptureScreen from './screens/CaptureScreen'
 import GameScreen from './screens/GameScreen'
 import GameOverScreen from './screens/GameOverScreen'
 
 export default function App() {
-  const [screen, setScreen] = useState('capture')
+  const [screen, setScreen] = useState('welcome')
   const [faceImage, setFaceImage] = useState(null)
   const [score, setScore] = useState(0)
   const [bestScore, setBestScore] = useState(
@@ -32,6 +33,7 @@ export default function App() {
 
   return (
     <div className="app">
+      {screen === 'welcome' && <WelcomeScreen onStart={() => setScreen('capture')} />}
       {screen === 'capture' && <CaptureScreen onCapture={handleCapture} />}
       {screen === 'game' && faceImage && (
         <GameScreen key={score} faceImage={faceImage} onEnd={handleEnd} />
