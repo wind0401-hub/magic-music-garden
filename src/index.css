@@ -1,21 +1,208 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: #0d0d2b;
   overflow: hidden;
-  width: 100vw;
-  height: 100vh;
+  width: 100vw; height: 100vh;
   user-select: none;
   -webkit-user-select: none;
-  touch-action: none;
+  touch-action: manipulation;
+  font-family: system-ui, sans-serif;
 }
 
-#root {
-  width: 100vw;
-  height: 100vh;
+#root, .app {
+  width: 100vw; height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* CAPTURE */
+.capture-screen {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #ffecd2, #fcb69f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.big-btn {
+  font-size: 80px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+  transition: transform 0.15s;
+}
+.big-btn:active { transform: scale(0.9); }
+
+.camera-wrap {
+  position: relative;
+  width: 320px; height: 320px;
+}
+.camera-video {
+  width: 320px; height: 320px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 6px solid white;
+}
+.countdown {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.shutter-btn {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 60px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.preview-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+.face-preview {
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  border: 6px solid white;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+/* GAME */
+.game-screen {
+  width: 100%; height: 100%;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #87ceeb 0%, #b0e0ff 60%, #90ee90 60%, #5a8a3c 100%);
+}
+.ground {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 25%;
+  background: linear-gradient(180deg, #5a8a3c, #3d6b2a);
+}
+
+.hud {
+  position: absolute;
+  top: 12px; left: 12px; right: 12px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.progress-wrap {
+  height: 14px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+  overflow: hidden;
   position: relative;
 }
+.progress-bar {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 1s linear, background 1s linear;
+}
+.progress-icon {
+  position: absolute;
+  right: 8px; top: -2px;
+  font-size: 16px;
+}
+.score-display {
+  font-size: 22px;
+  min-height: 28px;
+}
+
+.player {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 5;
+}
+.player.hit { opacity: 0.6; }
+.face-img {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  border: 4px solid white;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.legs {
+  display: flex;
+  gap: 4px;
+  font-size: 22px;
+  margin-top: -4px;
+}
+
+.obstacle {
+  position: absolute;
+  bottom: 25%;
+  transform: translateX(-50%);
+  line-height: 1;
+}
+.star-item {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  z-index: 4;
+}
+.tap-hint {
+  position: absolute;
+  bottom: 30%;
+  right: 12%;
+  font-size: 56px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* GAME OVER */
+.gameover-screen {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.confetti {
+  position: absolute;
+  width: 12px; height: 12px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 1;
+}
+.gameover-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  z-index: 2;
+}
+.face-winner {
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  border: 6px solid gold;
+  box-shadow: 0 0 40px rgba(255,215,0,0.6);
+}
+.trophy { font-size: 72px; }
+.stars-row { font-size: 32px; display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
+.new-record { font-size: 80px; }
