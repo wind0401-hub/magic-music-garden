@@ -1,18 +1,27 @@
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import { BABY_NAME } from '../config'
 import { speak } from '../audio'
 
 export default function CaptureScreen({ onCapture }) {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
+  const streamRef = useRef(null)
   const [ready, setReady] = useState(false)
   const [countdown, setCountdown] = useState(null)
   const [preview, setPreview] = useState(null)
   const [error, setError] = useState(null)
 
+  // gắn stream vào video SAU KHI video element đã mount
+  useEffect(() => {
+    if (ready && streamRef.current && videoRef.current) {
+      const video = videoRef.current
+      video.srcObject = streamRef.current
+      video.play().catch(() => {})
+    }
+  }, [ready])
+
   const startCamera = useCallback(async () => {
     setError(null)
-    // thử front camera trước, nếu lỗi thì dùng bất kỳ camera nào
     const constraints = [
       { video: { facingMode: { exact: 'user' } } },
       { video: { facingMode: 'user' } },
@@ -26,15 +35,11 @@ export default function CaptureScreen({ onCapture }) {
       } catch {}
     }
     if (!stream) {
-      setError('Không mở được camera. Kiểm tra Safari cho phép dùng camera chưa?')
+      setError('Không mở được camera. Vào Cài đặt → Safari → Camera → Cho phép')
       return
     }
-    const video = videoRef.current
-    video.srcObject = stream
-    video.setAttribute('playsinline', 'true') // iOS bắt buộc
-    video.setAttribute('muted', 'true')
-    await video.play().catch(() => {})
-    setReady(true)
+    streamRef.current = stream
+    setReady(true) // render video element trước, useEffect sẽ gắn stream sau
     speak(`${BABY_NAME} ơi, nhìn vào camera nào!`)
   }, [])
 
