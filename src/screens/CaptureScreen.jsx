@@ -18,17 +18,16 @@ export default function CaptureScreen({ onCapture }) {
     if (step === 'camera' && streamRef.current && videoRef.current) {
       const video = videoRef.current
       video.srcObject = streamRef.current
-      video.onloadedmetadata = () => setVideoReady(true)
-      video.oncanplay = () => setVideoReady(true)
-      video.play()
-        .then(() => {
-          // iOS: play() resolving = stream is live, mark ready
-          setTimeout(() => setVideoReady(true), 300)
-        })
-        .catch(() => {})
-      // Fallback: nếu iOS không fire event nào, tự động mở sau 2s
-      const fallback = setTimeout(() => setVideoReady(true), 2000)
-      return () => clearTimeout(fallback)
+      // poll readyState vì iOS không fire events đáng tin cậy
+      const interval = setInterval(() => {
+        if (video.readyState >= 1 || video.videoWidth > 0) {
+          setVideoReady(true)
+          clearInterval(interval)
+        }
+      }, 100)
+      // hard fallback sau 3s
+      const fallback = setTimeout(() => { setVideoReady(true); clearInterval(interval) }, 3000)
+      return () => { clearInterval(interval); clearTimeout(fallback) }
     }
   }, [step])
 
@@ -124,7 +123,7 @@ export default function CaptureScreen({ onCapture }) {
           >
             <div className="cap-title small">Nhìn vào đây rồi nhấn 📸</div>
             <div className="cam-frame">
-              <video ref={videoRef} className="camera-video" playsInline muted />
+              <video ref={videoRef} className="camera-video" playsInline muted autoPlay />
               {!videoReady && (
                 <div className="cam-loading">⏳</div>
               )}
