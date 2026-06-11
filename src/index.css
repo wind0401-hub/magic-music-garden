@@ -312,13 +312,15 @@ body {
   background: linear-gradient(180deg, #81c784, #4caf50, #388e3c);
   display: flex;
   align-items: flex-start;
-  overflow: hidden;
+  overflow: visible; /* hoa nhô ra phía trên */
+  z-index: 3; /* đè lên sky */
 }
 .ground-flower {
   position: absolute;
-  top: -16px;
-  font-size: 28px;
+  top: -22px;
+  font-size: 26px;
   pointer-events: none;
+  z-index: 4;
 }
 
 .hud {
@@ -364,32 +366,68 @@ body {
   flex-direction: column;
   align-items: center;
   z-index: 5;
-  gap: 0;
+  transition: left 0.15s ease-out;
 }
-.player.hit { opacity: 0.6; }
+.player.hit { opacity: 0.65; }
+
 .crown {
-  font-size: 36px;
-  margin-bottom: -10px;
-  z-index: 1;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+  font-size: 32px;
+  margin-bottom: -8px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+}
+
+.face-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.arm {
+  font-size: 18px;
   line-height: 1;
 }
+.arm-left  { transform-origin: bottom right; margin-right: -2px; }
+.arm-right { transform-origin: bottom left;  margin-left:  -2px; transform: scaleX(-1); }
+
 .face-img {
-  width: 70px; height: 70px;
+  width: 66px; height: 66px;
   border-radius: 50%;
   border: 3px solid white;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   object-fit: cover;
-  z-index: 1;
   flex-shrink: 0;
 }
-.princess-body {
-  font-size: 72px;
-  margin-top: -18px;
+
+.princess-dress {
+  font-size: 68px;
+  margin-top: -14px;
   line-height: 1;
-  /* blue(240deg) + 120deg = red/pink */
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2))
-    hue-rotate(120deg) saturate(2) brightness(1.1);
+  filter: hue-rotate(120deg) saturate(2) brightness(1.1)
+    drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+}
+
+.legs {
+  display: flex;
+  gap: 2px;
+  font-size: 22px;
+  margin-top: -10px;
+}
+
+/* HIỆU ỨNG */
+.collect-burst {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  pointer-events: none;
+  z-index: 20;
+  white-space: nowrap;
+}
+.hit-flash {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 50, 50, 0.45);
+  pointer-events: none;
+  z-index: 50;
 }
 
 .obstacle {
@@ -397,8 +435,9 @@ body {
   bottom: 22%;
   transform: translateX(-50%);
   line-height: 1;
-  font-size: 56px !important;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  font-size: 56px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+  z-index: 4;
 }
 .star-item {
   position: absolute;
