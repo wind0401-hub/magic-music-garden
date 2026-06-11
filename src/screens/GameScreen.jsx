@@ -141,25 +141,34 @@ export default function GameScreen({ faceImage, onEnd }) {
       g.obstacles = updateObstacles(g.obstacles, g.speed)
       g.stars = updateStars(g.stars, g.speed)
 
-      const prevLen = g.stars.length
+      // checkStarCollect chỉ mark collected=true, không đổi length
+      // nên phải đếm số newly collected thay vì so sánh length
       g.stars = checkStarCollect(g.stars, GAME_CONFIG.playerX, stateRef.current.y)
+      const justCollected = g.stars.filter(s => s.collected).length
       let hitFlash = false
-      if (g.stars.length < prevLen) {
-        g.score++
+      if (justCollected > 0) {
+        g.score += justCollected
         sounds.star()
         speak(SPEECHES.collectStar)
         const eid = Date.now()
         g.collectEffects = [...g.collectEffects,
-          { id: eid, x: GAME_CONFIG.playerX, y: stateRef.current.y, label: '+1' }
+          { id: eid, x: GAME_CONFIG.playerX, y: stateRef.current.y, label: `+${justCollected}` }
         ]
         setTimeout(() => { g.collectEffects = g.collectEffects.filter(e => e.id !== eid) }, 700)
       }
 
       const ps = stateRef.current
-      // chỉ va chạm khi player đang gần mặt đất VÀ obstacle chưa đi qua (đang đến từ phải)
       const isNearGround = ps.y >= GAME_CONFIG.groundY - 6
+      // đánh dấu "cleared" nếu player đang ở trên không khi obstacle đi qua vùng X
+      g.obstacles = g.obstacles.map(o => {
+        if (o.cleared) return o
+        const sdx = o.x - GAME_CONFIG.playerX
+        if (sdx > -8 && sdx < 8 && !isNearGround) return { ...o, cleared: true }
+        return o
+      })
       const hit = isNearGround && !ps.isHit && g.obstacles.some(o => {
-        const sdx = o.x - GAME_CONFIG.playerX // dương = bên phải, âm = đã qua
+        if (o.cleared) return false
+        const sdx = o.x - GAME_CONFIG.playerX
         return sdx > -3 && sdx < 5
       })
       if (hit) {
