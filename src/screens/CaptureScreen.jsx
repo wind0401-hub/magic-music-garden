@@ -8,19 +8,34 @@ export default function CaptureScreen({ onCapture }) {
   const [ready, setReady] = useState(false)
   const [countdown, setCountdown] = useState(null)
   const [preview, setPreview] = useState(null)
+  const [error, setError] = useState(null)
 
   const startCamera = useCallback(async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: 400, height: 400 }
-      })
-      videoRef.current.srcObject = stream
-      videoRef.current.play()
-      setReady(true)
-      speak(`${BABY_NAME} ơi, nhìn vào camera nào!`)
-    } catch {
-      speak('Không mở được camera, thử lại nhé!')
+    setError(null)
+    // thử front camera trước, nếu lỗi thì dùng bất kỳ camera nào
+    const constraints = [
+      { video: { facingMode: { exact: 'user' } } },
+      { video: { facingMode: 'user' } },
+      { video: true },
+    ]
+    let stream = null
+    for (const c of constraints) {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia(c)
+        break
+      } catch {}
     }
+    if (!stream) {
+      setError('Không mở được camera. Kiểm tra Safari cho phép dùng camera chưa?')
+      return
+    }
+    const video = videoRef.current
+    video.srcObject = stream
+    video.setAttribute('playsinline', 'true') // iOS bắt buộc
+    video.setAttribute('muted', 'true')
+    await video.play().catch(() => {})
+    setReady(true)
+    speak(`${BABY_NAME} ơi, nhìn vào camera nào!`)
   }, [])
 
   const startCountdown = useCallback(() => {
@@ -67,9 +82,10 @@ export default function CaptureScreen({ onCapture }) {
             <div className="ci-icon">🤳</div>
             <div className="ci-text">Nhìn vào camera</div>
           </div>
+          {error && <div className="camera-error">⚠️ {error}</div>}
           <button className="open-camera-btn" onClick={startCamera}>
             📸
-            <span>Mở camera</span>
+            <span>{error ? 'Thử lại' : 'Mở camera'}</span>
           </button>
         </div>
       )}
