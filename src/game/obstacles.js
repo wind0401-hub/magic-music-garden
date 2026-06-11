@@ -1,6 +1,6 @@
 import { GAME_CONFIG } from '../config'
 
-const TYPES = ['🌵', '🪨', '🧸', '🍄', '🌊']
+const TYPES = ['🧁', '🍭', '🎀', '🐛', '🐸']
 
 export const createObstacle = (speed) => ({
   id: Date.now() + Math.random(),

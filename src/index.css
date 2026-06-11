@@ -253,49 +253,100 @@ body {
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  touch-action: manipulation;
 }
-.sky {
+
+.sky-princess {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #87ceeb 0%, #b0e0ff 60%, #90ee90 60%, #5a8a3c 100%);
+  background: linear-gradient(180deg,
+    #fce4ec 0%,
+    #f8bbd0 30%,
+    #ffd1dc 55%,
+    #e8f5e9 55%,
+    #c8e6c9 75%,
+    #a5d6a7 100%
+  );
 }
-.ground {
+
+.rainbow {
+  position: absolute;
+  top: 12%;
+  right: -10%;
+  width: 55vw;
+  height: 55vw;
+  border-radius: 50%;
+  border: 18px solid transparent;
+  border-top: 14px solid rgba(255,80,80,0.25);
+  border-right: 14px solid rgba(255,180,0,0.2);
+  box-shadow:
+    0 0 0 10px rgba(255,230,0,0.12),
+    0 0 0 20px rgba(100,220,100,0.1),
+    0 0 0 30px rgba(80,160,255,0.1),
+    0 0 0 40px rgba(180,80,255,0.08);
+  transform: rotate(-30deg);
+  pointer-events: none;
+}
+
+.cloud {
+  position: absolute;
+  pointer-events: none;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.ground-princess {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 25%;
-  background: linear-gradient(180deg, #5a8a3c, #3d6b2a);
+  height: 22%;
+  background: linear-gradient(180deg, #81c784, #4caf50, #388e3c);
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
+}
+.ground-flower {
+  position: absolute;
+  top: -16px;
+  font-size: 28px;
+  pointer-events: none;
 }
 
 .hud {
   position: absolute;
-  top: 12px; left: 12px; right: 12px;
+  top: env(safe-area-inset-top, 12px);
+  left: 12px; right: 12px;
   z-index: 10;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  padding-top: 8px;
 }
 .progress-wrap {
-  height: 14px;
-  background: rgba(0,0,0,0.2);
-  border-radius: 8px;
+  height: 18px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 20px;
   overflow: hidden;
   position: relative;
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 .progress-bar {
   height: 100%;
-  border-radius: 8px;
+  border-radius: 20px;
   transition: width 1s linear, background 1s linear;
 }
 .progress-icon {
   position: absolute;
-  right: 8px; top: -2px;
-  font-size: 16px;
+  right: 6px; top: -1px;
+  font-size: 14px;
 }
 .score-display {
-  font-size: 22px;
-  min-height: 28px;
+  font-size: 24px;
+  min-height: 30px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
+/* NHÂN VẬT CÔNG CHÚA */
 .player {
   position: absolute;
   transform: translate(-50%, -100%);
@@ -303,40 +354,51 @@ body {
   flex-direction: column;
   align-items: center;
   z-index: 5;
+  gap: 0;
 }
 .player.hit { opacity: 0.6; }
-.face-img {
-  width: 72px; height: 72px;
-  border-radius: 50%;
-  border: 4px solid white;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+.crown {
+  font-size: 28px;
+  margin-bottom: -8px;
+  z-index: 1;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
-.legs {
-  display: flex;
-  gap: 4px;
-  font-size: 22px;
-  margin-top: -4px;
+.face-img {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  object-fit: cover;
+  z-index: 1;
+}
+.princess-body {
+  font-size: 52px;
+  margin-top: -12px;
+  line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
 }
 
 .obstacle {
   position: absolute;
-  bottom: 25%;
+  bottom: 22%;
   transform: translateX(-50%);
   line-height: 1;
 }
 .star-item {
   position: absolute;
   transform: translate(-50%, -50%);
-  font-size: 32px;
+  font-size: 34px;
   z-index: 4;
+  filter: drop-shadow(0 0 6px rgba(100,180,255,0.8));
 }
 .tap-hint {
   position: absolute;
-  bottom: 30%;
-  right: 12%;
-  font-size: 56px;
+  bottom: 28%;
+  right: 10%;
+  font-size: 52px;
   pointer-events: none;
   z-index: 10;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
 }
 
 /* GAME OVER */

@@ -4,7 +4,7 @@ export const GAME_DURATION = 3 * 60 // 3 phút tính bằng giây
 
 export const GAME_CONFIG = {
   gravity: 0.5,
-  jumpForce: -11,
+  jumpForce: -8,
   groundY: 75,
   playerX: 18,
   playerSize: 80,

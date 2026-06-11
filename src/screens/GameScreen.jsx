@@ -7,7 +7,12 @@ import { createObstacle, updateObstacles } from '../game/obstacles'
 import { createStar, updateStars, checkStarCollect } from '../game/stars'
 import ProgressBar from '../components/ProgressBar'
 
-const BG_LAYERS = ['🌤️', '🌈', '🏡', '🌳', '🌻']
+const CLOUDS = [
+  { id: 1, top: '8%',  size: 64, speed: 18 },
+  { id: 2, top: '18%', size: 48, speed: 25 },
+  { id: 3, top: '5%',  size: 80, speed: 30 },
+]
+const BG_FLOWERS = ['🌸', '🌺', '🌼', '🌷', '💐']
 
 export default function GameScreen({ faceImage, onEnd }) {
   const { stateRef, jump, update: updatePlayer, triggerHit } = usePlayer()
@@ -131,25 +136,49 @@ export default function GameScreen({ faceImage, onEnd }) {
   }, [])
 
   return (
-    <div
-      className="game-screen"
-      onPointerDown={handleTap}
-    >
-      {/* background */}
-      <div className="sky" />
-      <div className="ground" />
+    <div className="game-screen" onPointerDown={handleTap}>
+
+      {/* background bầu trời công chúa */}
+      <div className="sky-princess" />
+
+      {/* cầu vồng */}
+      <div className="rainbow" />
+
+      {/* mây bay */}
+      {CLOUDS.map(c => (
+        <motion.div
+          key={c.id}
+          className="cloud"
+          style={{ top: c.top, fontSize: c.size }}
+          animate={{ x: ['-10%', '110%'] }}
+          transition={{ duration: c.speed, repeat: Infinity, ease: 'linear', delay: c.id * 4 }}
+        >☁️</motion.div>
+      ))}
+
+      {/* hoa trang trí mặt đất */}
+      <div className="ground-princess">
+        {BG_FLOWERS.map((f, i) => (
+          <motion.span
+            key={i}
+            className="ground-flower"
+            style={{ left: `${i * 22 + 5}%` }}
+            animate={{ y: [0, -6, 0], rotate: [-8, 8, -8] }}
+            transition={{ duration: 1.5 + i * 0.3, repeat: Infinity, delay: i * 0.2 }}
+          >{f}</motion.span>
+        ))}
+      </div>
 
       {/* HUD */}
       <div className="hud">
         <ProgressBar remaining={renderState.timeLeft} total={GAME_DURATION} />
         <div className="score-display">
           {Array.from({ length: Math.min(renderState.score, 10) }).map((_, i) => (
-            <span key={i}>⭐</span>
+            <span key={i}>💖</span>
           ))}
         </div>
       </div>
 
-      {/* ngôi sao */}
+      {/* ngôi sao / tim thu thập */}
       <AnimatePresence>
         {renderState.stars.map(s => (
           <motion.div
@@ -157,9 +186,9 @@ export default function GameScreen({ faceImage, onEnd }) {
             className="star-item"
             style={{ left: `${s.x}%`, top: `${s.y}%` }}
             initial={{ scale: 0 }}
-            animate={{ scale: [1, 1.2, 1], rotate: [0, 20, -20, 0] }}
+            animate={{ scale: [1, 1.3, 1], rotate: [0, 20, -20, 0] }}
             transition={{ duration: 1, repeat: Infinity }}
-          >⭐</motion.div>
+          >💎</motion.div>
         ))}
       </AnimatePresence>
 
@@ -169,35 +198,26 @@ export default function GameScreen({ faceImage, onEnd }) {
           key={o.id}
           className="obstacle"
           style={{ left: `${o.x}%`, fontSize: o.size }}
-        >
-          {o.type}
-        </div>
+        >{o.type}</div>
       ))}
 
-      {/* nhân vật */}
+      {/* nhân vật công chúa */}
       <motion.div
         className={`player ${renderState.isHit ? 'hit' : ''}`}
-        style={{
-          left: `${GAME_CONFIG.playerX}%`,
-          top: `${renderState.playerY}%`,
-        }}
-        animate={renderState.isHit ? { rotate: [-15, 15, -15, 0] } : { rotate: 0 }}
+        style={{ left: `${GAME_CONFIG.playerX}%`, top: `${renderState.playerY}%` }}
+        animate={renderState.isHit ? { rotate: [-12, 12, -12, 0] } : { rotate: 0 }}
         transition={{ duration: 0.3 }}
       >
+        {/* vương miện */}
+        <div className="crown">👑</div>
+        {/* mặt bé */}
         <img src={faceImage} className="face-img" alt="" />
-        {/* chân đang chạy */}
-        {!renderState.isHit && (
-          <div className="legs">
-            <motion.span
-              animate={{ rotate: [30, -30] }}
-              transition={{ duration: 0.3, repeat: Infinity, repeatType: 'reverse' }}
-            >🦵</motion.span>
-            <motion.span
-              animate={{ rotate: [-30, 30] }}
-              transition={{ duration: 0.3, repeat: Infinity, repeatType: 'reverse' }}
-            >🦵</motion.span>
-          </div>
-        )}
+        {/* thân công chúa */}
+        <motion.div
+          className="princess-body"
+          animate={renderState.isHit ? {} : { y: [0, -2, 0] }}
+          transition={{ duration: 0.25, repeat: Infinity, repeatType: 'reverse' }}
+        >👗</motion.div>
       </motion.div>
 
       {/* gợi ý tap lúc đầu */}
@@ -206,9 +226,7 @@ export default function GameScreen({ faceImage, onEnd }) {
           className="tap-hint"
           animate={{ scale: [1, 1.2, 1], opacity: [1, 0.5, 1] }}
           transition={{ duration: 1, repeat: Infinity }}
-        >
-          👆
-        </motion.div>
+        >👆</motion.div>
       )}
     </div>
   )
