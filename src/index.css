@@ -322,16 +322,20 @@ body {
 .score-display {
   display: flex;
   align-items: center;
-  gap: 4px;
-  min-height: 30px;
+  gap: 6px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 24px;
+  padding: 4px 14px 4px 10px;
+  border: 2px solid rgba(255,255,255,0.5);
 }
-.score-icon { font-size: 22px; }
+.score-icon { font-size: 26px; }
 .score-number {
-  font-size: 28px;
+  font-size: 38px;
   font-weight: 900;
   color: #fff;
-  text-shadow: 0 2px 6px rgba(200,0,100,0.5), 0 0 2px #ff69b4;
-  min-width: 36px;
+  text-shadow: 0 2px 8px rgba(180,0,80,0.6), 0 0 4px #ff69b4;
+  min-width: 40px;
+  line-height: 1;
 }
 
 /* HUD TOP */
@@ -380,7 +384,7 @@ body {
 /* NHÂN VẬT CHIBI */
 .player-wrap {
   position: absolute;
-  transform: translate(-50%, -100%);
+  transform: translateX(-50%);
   z-index: 5;
   transition: left 0.12s ease-out;
 }

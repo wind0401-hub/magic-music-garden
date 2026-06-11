@@ -279,7 +279,7 @@ export default function GameScreen({ faceImage, onEnd }) {
       {/* nhân vật */}
       <motion.div
         className="player-wrap"
-        style={{ left: `${playerLeft}%`, top: `${renderState.playerY}%` }}
+        style={{ left: `${playerLeft}%`, bottom: `${100 - renderState.playerY}%` }}
         animate={renderState.isHit ? { x: [-6, 6, -4, 0] } : { x: 0 }}
         transition={{ duration: 0.3 }}
       >
