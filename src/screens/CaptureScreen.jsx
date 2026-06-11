@@ -9,27 +9,33 @@ export default function CaptureScreen({ onCapture }) {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const streamRef = useRef(null)
+  const pollRef = useRef(null)
   const [step, setStep] = useState('start')   // start | camera | flash | preview
   const [preview, setPreview] = useState(null)
   const [error, setError] = useState(null)
   const [videoReady, setVideoReady] = useState(false)
 
-  useEffect(() => {
-    if (step === 'camera' && streamRef.current && videoRef.current) {
-      const video = videoRef.current
-      video.srcObject = streamRef.current
-      // poll readyState vì iOS không fire events đáng tin cậy
-      const interval = setInterval(() => {
-        if (video.readyState >= 1 || video.videoWidth > 0) {
-          setVideoReady(true)
-          clearInterval(interval)
-        }
-      }, 100)
-      // hard fallback sau 3s
-      const fallback = setTimeout(() => { setVideoReady(true); clearInterval(interval) }, 3000)
-      return () => { clearInterval(interval); clearTimeout(fallback) }
-    }
-  }, [step])
+  // callback ref: chạy ngay khi video element mount vào DOM
+  const videoCallbackRef = useCallback((node) => {
+    videoRef.current = node
+    if (!node || !streamRef.current) return
+    node.srcObject = streamRef.current
+    // clear poll cũ nếu có
+    if (pollRef.current) clearInterval(pollRef.current)
+    let done = false
+    pollRef.current = setInterval(() => {
+      if (done) return
+      if (node.readyState >= 1 || node.videoWidth > 0) {
+        done = true
+        clearInterval(pollRef.current)
+        setVideoReady(true)
+      }
+    }, 100)
+    // hard fallback 3s
+    setTimeout(() => {
+      if (!done) { done = true; clearInterval(pollRef.current); setVideoReady(true) }
+    }, 3000)
+  }, [])
 
   const startCamera = useCallback(async () => {
     setError(null)
@@ -123,7 +129,7 @@ export default function CaptureScreen({ onCapture }) {
           >
             <div className="cap-title small">Nhìn vào đây rồi nhấn 📸</div>
             <div className="cam-frame">
-              <video ref={videoRef} className="camera-video" playsInline muted autoPlay />
+              <video ref={videoCallbackRef} className="camera-video" playsInline muted autoPlay />
               {!videoReady && (
                 <div className="cam-loading">⏳</div>
               )}
