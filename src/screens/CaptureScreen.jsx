@@ -20,7 +20,15 @@ export default function CaptureScreen({ onCapture }) {
       video.srcObject = streamRef.current
       video.onloadedmetadata = () => setVideoReady(true)
       video.oncanplay = () => setVideoReady(true)
-      video.play().catch(() => {})
+      video.play()
+        .then(() => {
+          // iOS: play() resolving = stream is live, mark ready
+          setTimeout(() => setVideoReady(true), 300)
+        })
+        .catch(() => {})
+      // Fallback: nếu iOS không fire event nào, tự động mở sau 2s
+      const fallback = setTimeout(() => setVideoReady(true), 2000)
+      return () => clearTimeout(fallback)
     }
   }, [step])
 
