@@ -5,9 +5,11 @@ export const createStar = () => ({
   collected: false,
 })
 
+const speedFactor = () => Math.min(1, 390 / window.innerWidth)
+
 export const updateStars = (stars, speed) =>
   stars
-    .map(s => ({ ...s, x: s.x - speed * 0.35 }))
+    .map(s => ({ ...s, x: s.x - speed * 0.35 * speedFactor() }))
     .filter(s => s.x > -10 && !s.collected)
 
 export const checkStarCollect = (stars, playerX, playerY) =>

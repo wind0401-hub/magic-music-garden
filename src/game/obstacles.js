@@ -10,9 +10,12 @@ export const createObstacle = (speed) => ({
   speed,
 })
 
+// normalize tốc độ theo iPhone width (390px) để màn hình to không chạy nhanh hơn
+const speedFactor = () => Math.min(1, 390 / window.innerWidth)
+
 export const updateObstacles = (obstacles, speed) =>
   obstacles
-    .map(o => ({ ...o, x: o.x - speed * 0.4 }))
+    .map(o => ({ ...o, x: o.x - speed * 0.4 * speedFactor() }))
     .filter(o => o.x > -10)
 
 export const checkCollision = (obstacles, playerX, playerY, playerSize) => {

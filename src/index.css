@@ -258,13 +258,12 @@ body {
 .sky-princess {
   position: absolute;
   inset: 0;
+  /* sky chiếm 78% từ trên, khớp với ground bắt đầu ở 78% */
   background: linear-gradient(180deg,
     #fce4ec 0%,
-    #f8bbd0 25%,
-    #ffccde 50%,
-    #e8f5e9 50%,
-    #c8e6c9 78%,
-    #a5d6a7 100%
+    #f8bbd0 40%,
+    #ffccde 78%,
+    #ffccde 78%
   );
 }
 
@@ -388,8 +387,9 @@ body {
   font-size: 72px;
   margin-top: -18px;
   line-height: 1;
+  /* blue(240deg) + 120deg = red/pink */
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2))
-    hue-rotate(300deg) saturate(1.5);
+    hue-rotate(120deg) saturate(2) brightness(1.1);
 }
 
 .obstacle {
